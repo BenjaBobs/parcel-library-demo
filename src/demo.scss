@@ -1,0 +1,28 @@
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  > div {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.menu {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: lightcoral;
+}
+
+.content {
+  flex-grow: 1;
+  height: 100%;
+  background-color: aquamarine;
+}
+
+.nav-item {
+  padding: 8px;
+  width: 100%;
+}
