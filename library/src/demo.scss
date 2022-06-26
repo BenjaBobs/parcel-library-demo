@@ -22,7 +22,20 @@ body {
   background-color: aquamarine;
 }
 
+.nav-section {
+  padding-left: 8px;
+  padding-right: 4px;
+}
+
 .nav-item {
-  padding: 8px;
   width: 100%;
+
+  &.link {
+    text-decoration: none;
+  }
+
+  &.match {
+    font-weight: 600;
+    text-decoration: underline;
+  }
 }

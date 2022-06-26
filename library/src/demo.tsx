@@ -5,21 +5,16 @@ import { BrowserRouter, NavLink, Route, Routes, useMatch } from 'react-router-do
 // @ts-ignore
 import * as docs from './lib/**/*.docs.tsx';
 
-const flatDocs = flattenGlob<ReactNode>(
-  docs,
-  (node) => node["__esModule"] === true
-);
-console.log(flatDocs);
+const flatDocs = flattenGlob<ReactNode>(docs);
 
-const reactRootElement = document.body.appendChild(
-  document.createElement("div")
+const reactRoot = createRoot(
+  document.body.appendChild(document.createElement("div"))
 );
-const reactRoot = createRoot(reactRootElement);
 
 reactRoot.render(
   <BrowserRouter>
     <div className="menu">
-      <GlobMenu files={docs} />
+      <NavMenu files={docs} />
     </div>
     <div className="content">
       <Routes>
@@ -28,7 +23,7 @@ reactRoot.render(
             key={doc.path}
             path={doc.path}
             // @ts-ignore
-            element={<RenderDoc component={<doc.Value />} />}
+            element={<doc.Value />}
           />
         ))}
       </Routes>
@@ -38,65 +33,56 @@ reactRoot.render(
 
 type GlobImport<T> = { [key: string]: T | GlobImport<T> };
 
-function GlobMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
+function NavMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
   return (
     <>
       {Object.entries(props.files).map(([key, value]) => {
         const nextKey = props.parent ? `${props.parent}/${key}` : key;
-        const isMdx = typeof value!["default"] === "function";
+        const isModule = (value as any)["__esModule"] === true;
 
         return (
-          <React.Fragment key={nextKey}>
-            {isMdx ? (
+          <div className="nav-section" key={nextKey}>
+            {isModule ? (
               <NavLink
                 className={({ isActive }) =>
-                  `nav-item ${isActive ? "match" : ""}`
+                  `nav-item link ${isActive ? "match" : ""}`
                 }
                 to={nextKey}
               >
                 {key}
               </NavLink>
             ) : (
-              <NavText name={key} parent={props.parent} />
+              <>
+                <NavMenuSection name={key} parent={props.parent} />
+                <NavMenu
+                  parent={nextKey}
+                  files={value as GlobImport<ReactNode>}
+                />
+              </>
             )}
-            {typeof value === "object" && !value!["default"] && (
-              <GlobMenu
-                parent={nextKey}
-                files={value as GlobImport<ReactNode>}
-              />
-            )}
-          </React.Fragment>
+          </div>
         );
       })}
     </>
   );
 }
 
-function RenderDoc(props: { component: ReactNode }) {
-  return <div>{props.component}</div>;
-}
-
-function flattenGlob<T>(
-  glob: GlobImport<T>,
-  isLeaf: (glob: GlobImport<T>) => boolean,
-  parent?: string
-): { path: string; Value: T }[] {
-  return isLeaf(glob)
-    ? [{ path: parent!, Value: (glob as any).default as T }]
-    : Object.entries(glob).flatMap(([key, value]) =>
-        flattenGlob(
-          value as GlobImport<T>,
-          isLeaf,
-          parent ? `${parent}/${key}` : key
-        )
-      );
-}
-
-function NavText(props: { name: string; parent?: string }) {
+function NavMenuSection(props: { name: string; parent?: string }) {
   const route = props.parent ? `${props.parent}/${props.name}` : props.name;
   const isMatch = useMatch(route + "/*");
 
   return (
     <div className={`nav-item ${isMatch ? "match" : ""}`}>{props.name}</div>
   );
+}
+
+function flattenGlob<T>(
+  glob: GlobImport<T>,
+  parent?: string
+): { path: string; Value: T }[] {
+  return (glob as any)["__esModule"] === true
+    ? [{ path: parent!, Value: (glob as any).default as T }]
+    : Object.entries(glob).flatMap(([key, value]) =>
+        flattenGlob(value as GlobImport<T>, parent ? `${parent}/${key}` : key)
+      );
 }
