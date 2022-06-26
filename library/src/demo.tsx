@@ -41,7 +41,7 @@ function NavMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
         const isModule = (value as any)["__esModule"] === true;
 
         return (
-          <div className="nav-section" key={nextKey}>
+          <div className="nav-section-block" key={nextKey}>
             {isModule ? (
               <NavLink
                 className={({ isActive }) =>
@@ -72,7 +72,9 @@ function NavMenuSection(props: { name: string; parent?: string }) {
   const isMatch = useMatch(route + "/*");
 
   return (
-    <div className={`nav-item ${isMatch ? "match" : ""}`}>{props.name}</div>
+    <div className={`nav-item section ${isMatch ? "match" : ""}`}>
+      {props.name}
+    </div>
   );
 }
 

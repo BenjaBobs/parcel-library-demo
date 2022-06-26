@@ -19,12 +19,21 @@ body {
 .content {
   flex-grow: 1;
   height: 100%;
+  padding: 16px;
   background-color: aquamarine;
 }
 
-.nav-section {
+.nav-section-block {
   padding-left: 8px;
   padding-right: 4px;
+}
+
+pre {
+  background-color: lightgrey;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 8px;
+  width: fit-content;
 }
 
 .nav-item {
