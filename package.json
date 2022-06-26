@@ -1,14 +1,19 @@
 {
   "name": "parcel-demo-lib",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "Test of parcel for libraries",
   "license": "MIT",
-  "module": "dist/lib/module.js",
+  "module": "dist/lib/index.js",
   "types": "dist/lib/types.d.ts",
-  "isLibrary": true,
   "targets": {
+    "types": {
+      "source": "src/index.ts",
+      "isLibrary": true,
+      "distDir": "dist/lib"
+    },
     "library": {
       "source": "src/index.ts",
+      "isLibrary": true,
       "distDir": "dist/lib"
     },
     "demo": {
@@ -16,22 +21,31 @@
       "distDir": "dist/demo"
     }
   },
+  "files": [
+    "dist/lib"
+  ],
   "scripts": {
     "dev": "parcel --target demo --no-autoinstall --dist-dir dist/demo",
     "build": "parcel build"
   },
   "dependencies": {
-    "@mdx-js/react": "1.6.22",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "6"
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.3.0"
   },
   "devDependencies": {
-    "@parcel/resolver-glob": "^2.5.0",
-    "@parcel/transformer-mdx": "^2.5.0",
-    "@parcel/transformer-sass": "^2.5.0",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.2",
-    "parcel": "^2.5.0"
+    "@parcel/packager-ts": "2.6.2",
+    "@parcel/resolver-glob": "2.6.2",
+    "@parcel/transformer-inline": "2.6.2",
+    "@parcel/transformer-inline-string": "2.6.2",
+    "@parcel/transformer-sass": "2.6.2",
+    "@parcel/transformer-typescript-types": "^2.6.2",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.5",
+    "parcel": "2.6.2",
+    "typescript": "^4.7.4"
+  },
+  "alias": {
+    "process": false
   }
 }

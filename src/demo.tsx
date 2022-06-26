@@ -1,29 +1,37 @@
 import React, { ReactNode } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter, NavLink, Route, Routes, useMatch } from 'react-router-dom';
 
-import * as mdxFiles from './lib/**/*.mdx';
+import * as docs from './lib/**/*.docs.tsx';
 
-console.log(mdxFiles);
-const flat = flattenGlobImport(mdxFiles) as { path: string; Mdx: ReactNode }[];
-console.log("flat", flat);
+const flatDocs = flattenGlob<ReactNode>(
+  docs,
+  (node) => node["__esModule"] === true
+);
+console.log(flatDocs);
 
-const reactRoot = document.body.appendChild(document.createElement("div"));
+const reactRootElement = document.body.appendChild(
+  document.createElement("div")
+);
+const reactRoot = createRoot(reactRootElement);
 
-ReactDOM.render(
+reactRoot.render(
   <BrowserRouter>
     <div className="menu">
-      <GlobMenu files={mdxFiles} />
+      <GlobMenu files={docs} />
     </div>
     <div className="content">
       <Routes>
-        {flat.map(({ path, Mdx }) => (
-          <Route key={path} path={path} element={<Mdx />} />
+        {flatDocs.map((doc) => (
+          <Route
+            key={doc.path}
+            path={doc.path}
+            element={<RenderDoc component={<doc.Value />} />}
+          />
         ))}
       </Routes>
     </div>
-  </BrowserRouter>,
-  reactRoot
+  </BrowserRouter>
 );
 
 type GlobImport<T> = { [key: string]: T | GlobImport<T> };
@@ -33,7 +41,7 @@ function GlobMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
     <>
       {Object.entries(props.files).map(([key, value]) => {
         const nextKey = props.parent ? `${props.parent}/${key}` : key;
-        const isMdx = typeof value["default"] === "function";
+        const isMdx = typeof value!["default"] === "function";
 
         return (
           <React.Fragment key={nextKey}>
@@ -49,7 +57,7 @@ function GlobMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
             ) : (
               <NavText name={key} parent={props.parent} />
             )}
-            {typeof value === "object" && !value["default"] && (
+            {typeof value === "object" && !value!["default"] && (
               <GlobMenu
                 parent={nextKey}
                 files={value as GlobImport<ReactNode>}
@@ -62,12 +70,21 @@ function GlobMenu(props: { files: GlobImport<ReactNode>; parent?: string }) {
   );
 }
 
-function flattenGlobImport<T>(files: GlobImport<T>, parent?: string) {
-  return files["default"]
-    ? [{ path: parent, Mdx: files["default"] }]
-    : Object.entries(files).flatMap(([key, value]) =>
-        flattenGlobImport(
+function RenderDoc(props: { component: ReactNode }) {
+  return <div>{props.component}</div>;
+}
+
+function flattenGlob<T>(
+  glob: GlobImport<T>,
+  isLeaf: (glob: GlobImport<T>) => boolean,
+  parent?: string
+): { path: string; Value: T }[] {
+  return isLeaf(glob)
+    ? [{ path: parent!, Value: (glob as any).default as T }]
+    : Object.entries(glob).flatMap(([key, value]) =>
+        flattenGlob(
           value as GlobImport<T>,
+          isLeaf,
           parent ? `${parent}/${key}` : key
         )
       );

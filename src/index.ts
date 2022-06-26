@@ -1,3 +1,3 @@
-import { CounterButton } from './lib/counter-button/counter-button';
+import { CounterButton } from './lib/components/counter-button/counter-button';
 
 export { CounterButton };

@@ -7,9 +7,6 @@
   "transformers": {
     "*.scss": [
       "@parcel/transformer-sass"
-    ],
-    "*.mdx": [
-      "@parcel/transformer-mdx"
     ]
   }
 }

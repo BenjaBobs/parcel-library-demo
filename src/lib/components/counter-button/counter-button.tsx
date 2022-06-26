@@ -1,3 +1,5 @@
+import './counter-button.scss';
+
 import { useState } from 'react';
 
 export function CounterButton(props: { initial: number }) {
