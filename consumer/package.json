@@ -1,0 +1,19 @@
+{
+  "name": "parcel-library-consumer",
+  "version": "0.0.1",
+  "description": "Test of package consumption",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel src/main.html",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "parcel": "^2.6.2"
+  },
+  "dependencies": {
+    "parcel-demo-lib": "0.0.6"
+  }
+}

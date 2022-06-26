@@ -1,15 +1,17 @@
 {
   "name": "parcel-demo-lib",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Test of parcel for libraries",
   "license": "MIT",
-  "module": "dist/lib/index.js",
+  "module": "dist/lib/index.mjs",
   "types": "dist/lib/types.d.ts",
+  "type": "module",
   "targets": {
+    "module": {
+      "source": "src/index.ts"
+    },
     "types": {
-      "source": "src/index.ts",
-      "isLibrary": true,
-      "distDir": "dist/lib"
+      "source": "src/index.ts"
     },
     "library": {
       "source": "src/index.ts",

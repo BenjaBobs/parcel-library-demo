@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, NavLink, Route, Routes, useMatch } from 'react-router-dom';
 
+// @ts-ignore
 import * as docs from './lib/**/*.docs.tsx';
 
 const flatDocs = flattenGlob<ReactNode>(
@@ -26,6 +27,7 @@ reactRoot.render(
           <Route
             key={doc.path}
             path={doc.path}
+            // @ts-ignore
             element={<RenderDoc component={<doc.Value />} />}
           />
         ))}

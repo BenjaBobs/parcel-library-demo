@@ -18,7 +18,7 @@ function MyComp() {
 
   return (
     <button onClick={async () => setPerson(await PeopleService.getPerson())}>
-      wat: {person?.name?.first}
+      Person: {person?.name?.first ?? "click to fetch"}
     </button>
   );
 }
